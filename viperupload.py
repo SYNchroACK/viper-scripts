@@ -17,11 +17,11 @@ opt_parser.add_option("-d", "--directory", action="store",dest="directory",defau
   help="Directory to submit")
 opt_parser.add_option("-s", "--sample", action="store",dest="sample",default=None,
   help="Single sample to submit")
-opt_parser.add_option("-t", "--tags", action="store",type=float,dest="tags",default=None,
+opt_parser.add_option("-t", "--tags", action="store",dest="tags",default=None,
   help="Additional tags that the malware sample could use added")
 (options, args) = opt_parser.parse_args()
 
-if (options.directory ^ options.sample == 1):
+if not(bool(options.directory) ^ bool(options.sample)):
    print 'Must provide either -d or -s options (not both)'
    exit()
 
@@ -31,14 +31,14 @@ url_run = 'http://localhost:8080/modules/run'
 
 if (options.directory):
   #expand the directory and store as filelist
-  filelist = [ f for f in listdir(options.directory) if isfile(join(options.directory,f))) ]
+  filelist = [ f for f in listdir(options.directory) if isfile(join(options.directory,f)) ]
   for file in filelist:
     fullpath = join(options.directory,file)
     files = {'file': open(fullpath, 'rb')}
     #upload the file
     r = requests.post(url_upload, files=files)
-    filesha = hashlib.sha256(open(join(filepath,file)).read()).hexdigest()
-    params = {'sha256': filesha, 'cmdline': 'pe impash'}
+    filesha = hashlib.sha256(open(fullpath,'rb').read()).hexdigest()
+    params = {'sha256': filesha, 'cmdline': 'pe imphash'}
     #send the command
     r = requests.post(url_run,params)
     data = r.json()
