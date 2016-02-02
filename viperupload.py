@@ -58,7 +58,7 @@ def submit_sample(fullpath,tags):
 		add_tags(filesha,tags)
 	else:
 		#in this case, we add the sample and the tags
-		print("%s added to DB")
+		print("%s added to DB" % fullpath)
 		files = {'file': open(fullpath, 'rb')}
 		r = requests.post(url_upload, files=files)
 		add_tags(filesha,tags)
