@@ -4,7 +4,6 @@ from os.path import isfile, join, abspath
 import hashlib
 import re
 import argparse
-import pprint
 
 usage = "viperupload.py [-d DIRECTORY | -s SAMPLE] -t tags"
 parser = argparse.ArgumentParser(description=usage)
@@ -20,12 +19,20 @@ tags = args.tags
 if not(bool(dir)^bool(sample)):
 	print 'Must provide either -s or -d options (not both)'
 	exit()
-	
+
+global url_upload
+global url_search
+global url_tag
+global url_run
+#input location of your viper instance
+url_upload = 'http://localhost:8080/file/add'
+url_search = 'http://localhost:8080/file/find'
+url_tag = 'http://localhost:8080/file/tags/add'
+url_run = 'http://localhost:8080/modules/run'
+
 def add_tags(filesha,tags):
 	#this method will add all tags that should be added by default
 	#imphash will be added in addition to user specified tags
-	url_tag = 'http://localhost:8080/file/tags/add'
-	url_run = 'http://localhost:8080/modules/run'
 	#imphash method
 	params = {'sha256': filesha, 'cmdline': 'pe imphash'}
 	r = requests.post(url_run,params)
@@ -37,8 +44,6 @@ def add_tags(filesha,tags):
 	r = requests.post(url_tag, params)
 
 def submit_sample(fullpath,tags):
-	url_upload = 'http://localhost:8080/file/add'
-	url_search = 'http://localhost:8080/file/find'
 	#do a quick search for the file so we don't add it multiple times
 	#viper will de-dup multiple uploads, but this is unnecessary and 
 	#could potentially cause overhead in the case of large upload sets
