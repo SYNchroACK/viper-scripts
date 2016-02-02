@@ -4,7 +4,6 @@ from os.path import isfile, join, abspath
 import hashlib
 import re
 import argparse
-import pprint
 
 usage = "viperupload.py [-d DIRECTORY | -s SAMPLE] -t tags"
 parser = argparse.ArgumentParser(description=usage)
@@ -39,10 +38,12 @@ def add_tags(filesha,tags):
 	r = requests.post(url_run,params)
 	data = r.json()
 	searchobj = re.search(r'Imphash\:\ \\x1b\[1m(.+?)\\x1b\[0m', data)
+	params = {'sha256': filesha, 'tags': ",".join(tags) }
 	if not searchobj is None:
-		tags.append(searchobj.group(1))
-	params = {'sha256': filesha, 'tags': ",".join(tags)}
+		imphash = searchobj.group(1)
+		params['tags'] += ",%s" % imphash
 	r = requests.post(url_tag, params)
+	
 
 def submit_sample(fullpath,tags):
 	#do a quick search for the file so we don't add it multiple times
