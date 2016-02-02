@@ -4,6 +4,7 @@ from os.path import isfile, join, abspath
 import hashlib
 import re
 import argparse
+import pprint
 
 usage = "viperupload.py [-d DIRECTORY | -s SAMPLE] -t tags"
 parser = argparse.ArgumentParser(description=usage)
@@ -51,14 +52,14 @@ def submit_sample(fullpath,tags):
 	search = {'sha256': filesha}
 	r = requests.post(url_search, search)
 	data = r.json()
-	if(len(data) > 0):
+	if('default' in data):
 		#our sample is already in the DB, we'll just add the tags
 		print("%s is already in the DB" % fullpath)
 		add_tags(filesha,tags)
 	else:
 		#in this case, we add the sample and the tags
 		print("%s added to DB")
-		files = {'file': open(file, 'rb')}
+		files = {'file': open(fullpath, 'rb')}
 		r = requests.post(url_upload, files=files)
 		add_tags(filesha,tags)
 		
