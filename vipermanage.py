@@ -123,8 +123,6 @@ if __name__ == '__main__':
 					with open(destination_file, "wb") as local_file:
 						local_file.write(r.read())
 					local_file.close()	
-			print("foo")
-
 	#List File
 	if args.list:
 		if args.search:
