@@ -119,10 +119,12 @@ if __name__ == '__main__':
 			#do a find of all the files that match a tag and download them
 			search = {'tag': args.tags[0]}
 			r = requests.post(url_search, search)
+			items = r.json()
 			if "default" in items:
 				mkdirs_p("downloads")
 				for item in items['default']:
 					print "downloads/%s - Downloading" % item['sha256']
+					destination_file = "./downloads/%s" % item['sha256']
 					r =  urllib2.urlopen(url_download+"/"+item['sha256'])
 					with open(destination_file, "wb") as local_file:
 						local_file.write(r.read())
@@ -146,11 +148,11 @@ if __name__ == '__main__':
 
 	#Remove File
 	if args.remove:
-		if args.search:
+		if args.sample:
 			#find the single sample and remove it
 			search = args.search
 			r = urllib2.urlopen(url_delete+"/"+search)
-			print("%s - removing" % item['sha256'])
+			print("%s - removing" % search)
 
 		if args.tags:
 			#find samples with that match a tag and remove them
