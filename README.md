@@ -45,7 +45,7 @@ vipermanage.py --upload --sample sample.exe -t lightserver APT
 ```
 Remove a bulk collection (according to tag)
 ```
-python vipermanage.py --remove -t BlackPOS
+vipermanage.py --remove -t BlackPOS
 ```
 Remove a Sample
 ```
