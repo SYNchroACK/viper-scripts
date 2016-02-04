@@ -8,6 +8,8 @@ import pprint
 import urllib2
 
 #Global vars - Modify for your Viper use
+host = 'localhost'
+port = '8080'
 global url_upload
 global url_search
 global url_tag
@@ -15,13 +17,13 @@ global url_run
 global url_delete
 global url_findtag
 global url_download
-url_upload = 'http://localhost:8080/file/add'    #add a sample
-url_search = 'http://localhost:8080/file/find'   #find a sample
-url_tag = 'http://localhost:8080/file/tags/add'  #add a tag
-url_run = 'http://localhost:8080/modules/run'    #run a command
-url_delete = 'http://localhost:8080/file/delete' #delete a sample
-url_findtag = 'http://localhost:8080/tags/list'  #list all tags
-url_download = 'http://localhost:8080/file/get'  #retrieve a file 
+url_upload = 'http://'+host+':'+port+'/file/add'    #add a sample
+url_search = 'http://'+host+':'+port+'/file/find'   #find a sample
+url_tag = 'http://'+host+':'+port+'/file/tags/add'  #add a tag
+url_run = 'http://'+host+':'+port+'/modules/run'    #run a command
+url_delete = 'http://'+host+':'+port+'/file/delete' #delete a sample
+url_findtag = 'http://'+host+':'+port+'/tags/list'  #list all tags
+url_download = 'http://'+host+':'+port+'/file/get'  #retrieve a file 
 
 #functions
 def add_tags(filesha,tags):
@@ -74,9 +76,10 @@ def mkdirs_p(path, is_dir=True):
 			raise
 		return False
 
+
 if __name__ == '__main__':
 	#Parsing options
-	cli = argparse.ArgumentParser(description='Tool to create / modify / delete Portal users')
+	cli = argparse.ArgumentParser(description='Tool to manage samples in the Viper Malware DB')
 	group1 = cli.add_mutually_exclusive_group(required=True)
 	group1.add_argument('-u', '--upload',  action='store_true', help="Upload Sample(s)")
 	group1.add_argument('-d', '--download',action='store_true', help="Download Sample(s)")
@@ -99,6 +102,7 @@ if __name__ == '__main__':
 			if (isfile(args.sample)):
 				fullpath = abspath(args.sample)
 				submit_sample(fullpath,args.tags)
+				
 	#Download File
 	if args.download:
 		if args.search:
