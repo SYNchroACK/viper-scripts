@@ -34,6 +34,8 @@ def add_tags(filesha,tags):
 	r = requests.post(url_run,params)
 	data = r.json()
 	searchobj = re.search(r'Imphash\:\ \\x1b\[1m(.+?)\\x1b\[0m', data)
+        if tags is None:
+            tags = []
 	params = {'sha256': filesha, 'tags': ",".join(tags[0]) }
 	if not searchobj is None:
 		imphash = searchobj.group(1)
